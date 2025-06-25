@@ -79,7 +79,7 @@ hitbox_lower: game.LedSprite = None
 ship: game.LedSprite = None
 game.add_life(5)
 music.set_built_in_speaker_enabled(True)
-ship = game.create_sprite(2, 5)
+ship = game.create_sprite(2, 4)
 ship.set(LedSpriteProperty.BRIGHTNESS, 1000)
 hitbox_lower = game.create_sprite(2, 5)
 hitbox_lower.set(LedSpriteProperty.BRIGHTNESS, 10)
