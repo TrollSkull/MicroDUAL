@@ -1,13 +1,13 @@
 def on_received_number(receivedNumber):
     global enemy_bullet
-    enemy_bullet = game.create_sprite(receivedNumber, -5)
+    enemy_bullet = game.create_sprite(receivedNumber, 0)
     enemy_bullet.set(LedSpriteProperty.BRIGHTNESS, 300)
     while True:
         if enemy_bullet.is_touching(hitbox_lower):
             enemy_bullet.delete()
             break
-    enemy_bullet.change(LedSpriteProperty.Y, 1)
-    basic.pause(200)
+        enemy_bullet.change(LedSpriteProperty.Y, 1)
+        basic.pause(200)
 radio.on_received_number(on_received_number)
 
 def on_button_pressed_a():
@@ -24,7 +24,7 @@ def on_button_pressed_a():
     friendly_bullet = game.create_sprite(ship.get(LedSpriteProperty.X), ship.get(LedSpriteProperty.Y))
     friendly_bullet.set(LedSpriteProperty.BRIGHTNESS, 300)
     while True:
-        if True:
+        if friendly_bullet.is_touching(hitbox_top):
             radio.send_number(friendly_bullet.get(LedSpriteProperty.X))
             friendly_bullet.delete()
             break
@@ -74,6 +74,7 @@ input.on_gesture(Gesture.LOGO_DOWN, on_gesture_logo_down)
 
 friendly_bullet: game.LedSprite = None
 enemy_bullet: game.LedSprite = None
+hitbox_top: game.LedSprite = None
 hitbox_lower: game.LedSprite = None
 ship: game.LedSprite = None
 game.add_life(5)
