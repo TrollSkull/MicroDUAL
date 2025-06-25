@@ -1,9 +1,23 @@
 def on_received_number(receivedNumber):
-    global enemy_bullet
+    global enemy_bullet, life
     enemy_bullet = game.create_sprite(receivedNumber, 0)
     enemy_bullet.set(LedSpriteProperty.BRIGHTNESS, 300)
     while True:
-        if enemy_bullet.is_touching(hitbox_lower):
+        if enemy_bullet.is_touching(ship):
+            music.play(music.create_sound_expression(WaveShape.SQUARE,
+                    200,
+                    1,
+                    255,
+                    0,
+                    100,
+                    SoundExpressionEffect.NONE,
+                    InterpolationCurve.CURVE),
+                music.PlaybackMode.UNTIL_DONE)
+            basic.show_icon(IconNames.NO)
+            life += -1
+            enemy_bullet.delete()
+            break
+        elif enemy_bullet.is_touching(hitbox_lower):
             enemy_bullet.delete()
             break
         enemy_bullet.change(LedSpriteProperty.Y, 1)
@@ -60,6 +74,11 @@ def on_button_pressed_ab():
     ship.set(LedSpriteProperty.BLINK, 0)
 input.on_button_pressed(Button.AB, on_button_pressed_ab)
 
+def on_received_string(receivedString):
+    basic.show_icon(IconNames.HAPPY)
+    basic.show_string("YOU WIN")
+radio.on_received_string(on_received_string)
+
 def on_gesture_tilt_right():
     while input.is_gesture(Gesture.TILT_RIGHT):
         ship.change(LedSpriteProperty.X, 1)
@@ -77,11 +96,18 @@ enemy_bullet: game.LedSprite = None
 hitbox_top: game.LedSprite = None
 hitbox_lower: game.LedSprite = None
 ship: game.LedSprite = None
-game.add_life(5)
+radio.set_group(1)
+life = 5
 music.set_built_in_speaker_enabled(True)
 ship = game.create_sprite(2, 4)
 ship.set(LedSpriteProperty.BRIGHTNESS, 1000)
 hitbox_lower = game.create_sprite(2, 5)
-hitbox_lower.set(LedSpriteProperty.BRIGHTNESS, 10)
+hitbox_lower.set(LedSpriteProperty.BRIGHTNESS, 5)
 hitbox_top = game.create_sprite(2, -5)
-hitbox_top.set(LedSpriteProperty.BRIGHTNESS, 10)
+hitbox_top.set(LedSpriteProperty.BRIGHTNESS, 5)
+
+def on_forever():
+    if life == 0:
+        radio.send_string("w")
+        game.game_over()
+basic.forever(on_forever)
